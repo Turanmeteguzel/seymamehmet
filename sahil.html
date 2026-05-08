@@ -21,11 +21,12 @@
     <meta property="og:url" content="https://havvaorhan.vercel.app/" />
     <meta
       property="og:image"
-      content="https://havvaorhan.vercel.app/assets/whatsapp-preview.png"
+      content="https://havvaorhan.vercel.app/assets/whatsapp-preview.jpg?v=2"
     />
-    <meta property="og:image:type" content="image/png" />
-    <meta property="og:image:width" content="681" />
-    <meta property="og:image:height" content="1024" />
+    <meta property="og:image:secure_url" content="https://havvaorhan.vercel.app/assets/whatsapp-preview.jpg?v=2" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta
       property="og:image:alt"
       content="Havva ve Orhan düğün davetiyesi kapak görseli"
@@ -38,7 +39,7 @@
     />
     <meta
       name="twitter:image"
-      content="https://havvaorhan.vercel.app/assets/whatsapp-preview.png"
+      content="https://havvaorhan.vercel.app/assets/whatsapp-preview.jpg?v=2"
     />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link
@@ -2416,7 +2417,7 @@
         </div>
       </div>
     </footer>
-    <audio id="pageAudio" loop preload="auto">
+    <audio id="pageAudio" loop preload="auto" autoplay>
       <source src="river-flows-in-you.mp3" type="audio/mpeg" />
     </audio>
     <button
@@ -2540,6 +2541,7 @@
         var musicToggle = document.getElementById("musicToggle");
         var nav = document.getElementById("luxury2Nav");
         var isAudioPlaying = false;
+        var audioUnlockArmed = false;
       
         function updateNavState() {
           if (!nav) {
@@ -2590,6 +2592,28 @@
             updateMusicButton();
           }
         }
+
+        function armAudioUnlock() {
+          if (!pageAudio || audioUnlockArmed) {
+            return;
+          }
+          audioUnlockArmed = true;
+
+          var unlock = function () {
+            if (!isAudioPlaying) {
+              playMusic();
+            }
+            document.removeEventListener("click", unlock, true);
+            document.removeEventListener("pointerdown", unlock, true);
+            document.removeEventListener("touchstart", unlock, true);
+            document.removeEventListener("keydown", unlock, true);
+          };
+
+          document.addEventListener("click", unlock, true);
+          document.addEventListener("pointerdown", unlock, true);
+          document.addEventListener("touchstart", unlock, true);
+          document.addEventListener("keydown", unlock, true);
+        }
       
         function pauseMusic() {
           if (!pageAudio) {
@@ -2609,6 +2633,13 @@
             playMusic();
           });
           updateMusicButton();
+        }
+
+        if (pageAudio) {
+          armAudioUnlock();
+          runAfterInvitationOpened(function () {
+            window.setTimeout(playMusic, 80);
+          });
         }
       
         if (nav) {
